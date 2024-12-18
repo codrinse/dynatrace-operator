@@ -1,0 +1,66 @@
+---
+apiVersion: dynatrace.com/v1beta1
+kind: DynaKube
+metadata:
+  name: {{ .Values.CLUSTER_NAME }}
+  namespace: dynatrace
+  annotations:
+    feature.dynatrace.com/automatic-kubernetes-api-monitoring: "true"
+    feature.dynatrace.com/enable-activegate-authtoken: "true"
+spec:
+  # Dynatrace apiUrl including the `/api` path at the end.
+  # For SaaS, set `YOUR_ENVIRONMENT_ID` to your environment ID.
+  # For Managed, change the apiUrl address.
+  # For instructions on how to determine the environment ID and how to configure the apiUrl address, see https://www.dynatrace.com/support/help/reference/dynatrace-concepts/environment-id/.
+  apiUrl: {{ .Values.API_URL }}
+  # Optional: Name of the secret holding the credentials required to connect to the Dynatrace tenant
+  # If unset, the name of this custom resource is used
+  #
+  # tokens: ""
+  skipCertCheck: false
+  # Network Zones are not configured
+  # networkZone: {{ .Values.GROUP }}
+  oneAgent:
+    hostGroup: {{ .Values.GROUP }}
+    # tokens: {{ .Values.CLUSTER_NAME }}
+    classicFullStack:
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists
+      oneAgentResources:
+        requests:
+          cpu: 100m
+          memory: 512Mi
+        limits:
+          cpu: 750m
+          memory: 1536Mi
+      autoUpdate: true
+      env:
+        - name: ONEAGENT_ENABLE_VOLUME_STORAGE
+          value: "false"
+
+# TO REVIEW AND ADD PROPER CI OF EACH NODE !!!
+#      args:
+#        - --set-host-tag=ci="CI"
+
+  # Configuration for ActiveGate instances.
+  activeGate:
+    # Enables listed ActiveGate capabilities
+    capabilities:
+      - routing
+      - kubernetes-monitoring
+      - metrics-ingest
+      - dynatrace-api
+    replicas: 2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: '1'
+        memory: 1536Mi
+    group: {{ .Values.GROUP }}
