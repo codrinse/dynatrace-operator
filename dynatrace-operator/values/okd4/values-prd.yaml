@@ -1,4 +1,4 @@
 ---
-CLUSTER_NAME: cegeka-prd-okd
-GROUP: cegeka-openshift
-API_URL: https://ehh45512.live.dynatrace.com/api
+CLUSTER_NAME: "cegeka-prd-okd"
+GROUP: "cegeka-openshift"
+API_URL: "https://ehh45512.live.dynatrace.com/api"
