@@ -2,7 +2,7 @@
 apiVersion: dynatrace.com/v1beta1
 kind: DynaKube
 metadata:
-  name: {{ .Values.CLUSTER_NAME }}
+  name: "{{ .Values.CLUSTER_NAME }}"
   namespace: dynatrace
   annotations:
     feature.dynatrace.com/automatic-kubernetes-api-monitoring: "true"
@@ -12,7 +12,7 @@ spec:
   # For SaaS, set `YOUR_ENVIRONMENT_ID` to your environment ID.
   # For Managed, change the apiUrl address.
   # For instructions on how to determine the environment ID and how to configure the apiUrl address, see https://www.dynatrace.com/support/help/reference/dynatrace-concepts/environment-id/.
-  apiUrl: {{ .Values.API_URL }}
+  apiUrl: "{{ .Values.API_URL }}"
   # Optional: Name of the secret holding the credentials required to connect to the Dynatrace tenant
   # If unset, the name of this custom resource is used
   #
@@ -21,8 +21,8 @@ spec:
   # Network Zones are not configured
   # networkZone: {{ .Values.GROUP }}
   oneAgent:
-    hostGroup: {{ .Values.GROUP }}
-    # tokens: {{ .Values.CLUSTER_NAME }}
+    hostGroup: "{{ .Values.GROUP }}"
+    # tokens: "{{ .Values.CLUSTER_NAME }}"
     classicFullStack:
       tolerations:
         - effect: NoSchedule
@@ -63,4 +63,4 @@ spec:
       limits:
         cpu: '1'
         memory: 1536Mi
-    group: {{ .Values.GROUP }}
+    group: "{{ .Values.GROUP }}"
